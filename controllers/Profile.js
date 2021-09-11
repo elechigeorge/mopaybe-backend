@@ -3,6 +3,7 @@ import asyncHandler from "express-async-handler";
 import normalize from "normalize-url";
 import { validationResult } from "express-validator";
 import Profile from "../model/Profile.js";
+import User from "../model/User.js";
 
 // @route    GET /profile/me
 // @desc     Get current users profile
@@ -11,7 +12,7 @@ const getProfile = asyncHandler(async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.user.id,
-    }).populate("user", ["name", "avatar"]);
+    }).populate("user");
 
     if (!profile) {
       return res.status(400).json({ msg: "There is no profile for this user" });
@@ -66,10 +67,13 @@ const createProfile = asyncHandler(async (req, res) => {
   try {
     // Using upsert option (creates new doc if no match is found):
     let profile = await Profile.findOneAndUpdate(
-      { user: req.user.id },
+      {
+        user: req.user,
+      },
       { $set: profileFields },
       { new: true, upsert: true, setDefaultsOnInsert: true }
     );
+
     return res.json(profile);
   } catch (err) {
     console.error(err.message);
@@ -82,7 +86,7 @@ const createProfile = asyncHandler(async (req, res) => {
 // @access   Public
 const getAllProfile = asyncHandler(async (req, res) => {
   try {
-    const profiles = await Profile.find().populate("user", ["name", "avatar"]);
+    const profiles = await Profile.find().populate("user");
     res.json(profiles);
   } catch (err) {
     console.error(err.message);
@@ -97,9 +101,9 @@ const getProfileById = asyncHandler(async ({ params: { user_id } }, res) => {
   try {
     const profile = await Profile.findOne({
       user: user_id,
-    }).populate("user", ["name", "avatar"]);
+    }).populate("user");
 
-    if (!profile) return res.status(400).json({ msg: "Profile not found" });
+    if (!profile) return res.status(400).json({ msg: "Profile is not found" });
 
     return res.json(profile);
   } catch (err) {

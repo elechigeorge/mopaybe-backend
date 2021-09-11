@@ -17,10 +17,13 @@ router
     check("company", "Company Name is required").notEmpty(),
     check("description", "Business Description is required").notEmpty(),
     createProfile
-  );
+  )
+  .get(protect, getProfile);
 
-router.route("/:id").get(getProfileById);
-router.route("/").get(getAllProfile);
-router.route("/:user_id", checkObjectId("user_id")).get();
+router.route("/current").get(getAllProfile);
+// router.route("/:id", checkObjectId("id")).get(protect, getProfileById);
+router
+  .route("/:user_id", checkObjectId("user_id"))
+  .get(protect, getProfileById);
 
 export default router;
