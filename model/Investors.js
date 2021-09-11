@@ -14,12 +14,25 @@ const InvestorSchema = new mongoose.Schema({
   },
   isInvestor: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 
-UserSchema.plugin(timestamp);
+InvestorSchema.plugin(timestamp);
 
-const User = mongoose.model("User", UserSchema);
+InvestorSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
-export default User;
+InvestorSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+const Investor = mongoose.model("Investor", InvestorSchema);
+
+export default Investor;
