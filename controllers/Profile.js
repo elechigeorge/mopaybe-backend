@@ -48,6 +48,7 @@ const createProfile = asyncHandler(async (req, res) => {
   // build a profile
   const profileFields = {
     user: req.user.id,
+    images: req.body.images,
     website:
       website && website !== "" ? normalize(website, { forceHttps: true }) : "",
     ...rest,
