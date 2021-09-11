@@ -20,8 +20,7 @@ router
   )
   .get(protect, getProfile);
 
-router.route("/current").get(getAllProfile);
-// router.route("/:id", checkObjectId("id")).get(protect, getProfileById);
+router.route("/all").get(getAllProfile);
 router
   .route("/:user_id", checkObjectId("user_id"))
   .get(protect, getProfileById);
