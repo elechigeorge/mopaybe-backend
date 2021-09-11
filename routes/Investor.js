@@ -2,15 +2,15 @@ import express from "express";
 
 const router = express.Router();
 import {
-  authUser,
-  registerUser,
-  getMemberById,
-} from "../controller/Investor.js";
+  authInvestor,
+  registerInvestor,
+  getInvestorById,
+} from "../controllers/Investor.js";
 
-router.route("/").post(registerUser);
+router.route("/").post(registerInvestor);
 
-router.route("/investor/:id").get(getMemberById);
+router.route("/investor/:id").get(getInvestorById);
 
-router.post("/login", authUser);
+router.post("/login", authInvestor);
 
 export default router;

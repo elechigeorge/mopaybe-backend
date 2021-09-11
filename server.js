@@ -10,6 +10,7 @@ const server = express();
 // URL ROUTES Configuration
 import User from "./routes/User.js";
 import Investor from "./routes/Investor.js";
+import Profile from "./routes/Profile.js";
 
 // middleware initialization
 server.use(cors());
@@ -19,16 +20,16 @@ server.use(express.json());
 // DATABASE CONNECTION SETUP BLOCK
 mongoose
   .connect(process.env.MongoURI, {
-    useCreateIndex: true,
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => console.log("Connection established..."))
+  .then(() => console.log("Database Connection established..."))
   .catch((error) => console.error(error.message));
 
 // URL ROUTE Middlewares
 server.use("/account", User);
 server.use("/investor", Investor);
+server.use("/profile", Profile);
 
 // server PORT Setup
 const PORT = process.env.PORT || 5000;

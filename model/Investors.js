@@ -1,5 +1,6 @@
 import timestamp from "mongoose-timestamp";
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const InvestorSchema = new mongoose.Schema({
   name: {

@@ -1,21 +1,26 @@
 import express from "express";
-import auth from "../middlewares/authentication";
+import { protect } from "../middlewares/authentication.js";
 import { check } from "express-validator";
-import checkObjectId from "../middlewares/checkObjectId";
+import checkObjectId from "../middlewares/checkObjectId.js";
 const router = express.Router();
-import { getProfile, createProfile } from "../controllers/Profile";
+import {
+  getProfile,
+  createProfile,
+  getAllProfile,
+  getProfileById,
+} from "../controllers/Profile.js";
 
 router
   .route("/")
   .post(
-    auth,
+    protect,
     check("company", "Company Name is required").notEmpty(),
     check("description", "Business Description is required").notEmpty(),
     createProfile
-  )
-  .get(getProfile);
+  );
 
-router.route("/user/:id").get(getMemberById);
-router.route("/user/:user_id", checkObjectId("user_id")).get();
+router.route("/:id").get(getProfileById);
+router.route("/").get(getAllProfile);
+router.route("/:user_id", checkObjectId("user_id")).get();
 
 export default router;

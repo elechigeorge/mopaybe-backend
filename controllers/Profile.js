@@ -1,15 +1,8 @@
-import express from "express";
-import auth from "../middlewares/authentication";
-import axios from "axios";
+import asyncHandler from "express-async-handler";
 // bring in normalize to give us a proper url, regardless of what user entered
 import normalize from "normalize-url";
-import { check, validationResult } from "express-validator";
-// initiate express router
-const router = express.Router();
-
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
-const Post = require("../../models/Post");
+import { validationResult } from "express-validator";
+import Profile from "../model/Profile.js";
 
 // @route    GET /profile/me
 // @desc     Get current users profile
@@ -43,7 +36,6 @@ const createProfile = asyncHandler(async (req, res) => {
   // destructure the request
   const {
     website,
-    skills,
     twitter,
     instagram,
     linkedin,
@@ -88,7 +80,7 @@ const createProfile = asyncHandler(async (req, res) => {
 // @route    GET api/profile
 // @desc     Get all profiles
 // @access   Public
-const getProfile = asyncHandler(async (req, res) => {
+const getAllProfile = asyncHandler(async (req, res) => {
   try {
     const profiles = await Profile.find().populate("user", ["name", "avatar"]);
     res.json(profiles);
@@ -116,4 +108,4 @@ const getProfileById = asyncHandler(async ({ params: { user_id } }, res) => {
   }
 });
 
-export { getProfile, createProfile, getProfileById };
+export { getProfile, createProfile, getProfileById, getAllProfile };

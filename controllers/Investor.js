@@ -12,10 +12,13 @@ const authInvestor = asyncHandler(async (req, res) => {
 
   if (investor && (await investor.matchPassword(password))) {
     res.json({
-      _id: investor._id,
       password: investor.password,
+      name: investor.name,
       email: investor.email,
       token: generateToken(investor._id),
+      date: investor.createdAt,
+      id: investor._id,
+      isInvestor: investor.isInvestor,
     });
   } else {
     res.status(401);
@@ -29,7 +32,7 @@ const authInvestor = asyncHandler(async (req, res) => {
 const registerInvestor = asyncHandler(async (req, res) => {
   const { email } = req.body;
 
-  const userExists = await Investor.findOne({ email });
+  const investorExists = await Investor.findOne({ email });
 
   if (investorExists) {
     res.status(400);
@@ -37,14 +40,19 @@ const registerInvestor = asyncHandler(async (req, res) => {
   }
 
   const investor = await Investor.create({
+    name: req.body.name,
     password: req.body.password,
     email: req.body.email,
   });
 
   if (investor) {
     res.status(201).json({
+      name: investor.name,
       email: investor.email,
       token: generateToken(investor._id),
+      date: investor.createdAt,
+      id: investor._id,
+      isInvestor: investor.isInvestor,
     });
   } else {
     res.status(400);

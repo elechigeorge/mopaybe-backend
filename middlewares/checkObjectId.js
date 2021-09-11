@@ -6,4 +6,4 @@ const checkObjectId = (idToCheck) => (req, res, next) => {
   next();
 };
 
-module.exports = checkObjectId;
+export default checkObjectId;
